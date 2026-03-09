@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Vision - Abnormal Behavior Detection Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">AI Vision</h1>
+                <p class="role">Admin</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- Dashboard -->
+                <div class="nav-section">
+                    <a href="#" class="nav-item active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <!-- User Data -->
+                <div class="nav-section-title">User Data</div>
+                <div class="nav-section">
+                    <a href="#" class="nav-item" data-page="add-users">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Users</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="contacts">
+                        <i class="fas fa-address-book"></i>
+                        <span>Contacts Information</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="user-chart">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>User Chart</span>
+                    </a>
+                </div>
+
+                <!-- Camera Management -->
+                <div class="nav-section-title">Camera Management</div>
+                <div class="nav-section">
+                    <a href="#" class="nav-item" data-page="camera-directory">
+                        <i class="fas fa-video"></i>
+                        <span>Camera Directory</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="manage-files">
+                        <i class="fas fa-folder"></i>
+                        <span>Manage Files</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="upload-video">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Upload Video</span>
+                    </a>
+                </div>
+
+                <!-- Charts and Metrics -->
+                <div class="nav-section-title">Charts and Metrics</div>
+                <div class="nav-section">
+                    <a href="#" class="nav-item" data-page="alerts-summary">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Alerts Summary</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="building-alerts">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Building Alerts</span>
+                    </a>
+                    <a href="#" class="nav-item" data-page="accumulated-alerts">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Accumulated Alerts</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="top-nav-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="page-title" id="pageTitle">DASHBOARD</h2>
+                </div>
+                <div class="top-nav-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search">
+                    </div>
+                    <button class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content Container -->
+            <div class="content" id="pageContent">
+                <!-- Dashboard Section -->
+                <section id="dashboard-page" class="page-section active">
+                    <!-- Welcome Message -->
+                    <div class="welcome-section">
+                        <p class="welcome-text">Welcome to your dashboard</p>
+                    </div>
+
+                    <!-- Video Preview Section -->
+                    <section class="video-preview-section">
+                        <div class="videos-grid">
+                            <div class="video-card">
+                                <video class="video-thumbnail" controls>
+                                    <source src="#" type="video/mp4">
+                                </video>
+                                <div class="video-label">Detach video</div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"></div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"></div>
+                            </div>
+                            <div class="video-card">
+                                <div class="video-placeholder"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Charts Section -->
+                    <div class="charts-container">
+                        <!-- Alerts Generated Chart -->
+                        <section class="chart-card">
+                            <h3 class="chart-title">Alerts Generated</h3>
+                            <canvas id="alertsChart"></canvas>
+                        </section>
+
+                        <!-- Users Pie Chart -->
+                        <section class="chart-card small">
+                            <h3 class="chart-title">Users</h3>
+                            <canvas id="usersChart"></canvas>
+                        </section>
+                    </div>
+
+                    <!-- Recent Alerts Section -->
+                    <section class="recent-alerts-section">
+                        <h3 class="section-title">Recent Alerts</h3>
+                        <div class="alerts-list" id="recentAlerts">
+                            <p style="color: #94a3b8; text-align: center; padding: 2rem;">Loading alerts...</p>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- Camera Directory Section -->
+                <section id="camera-directory-page" class="page-section">
+                    <div style="background: #1e293b; border-radius: 8px; padding: 2rem; text-align: center; color: #94a3b8;">
+                        <i class="fas fa-video" style="font-size: 3rem; color: #3b82f6; margin-bottom: 1rem; display: block;"></i>
+                        <h3>Camera Directory</h3>
+                        <p>View and manage all connected cameras</p>
+                        <div id="cameraGrid" style="margin-top: 2rem;"></div>
+                    </div>
+                </section>
+
+                <!-- Upload Video Section -->
+                <section id="upload-video-page" class="page-section">
+                    <div style="background: #1e293b; border-radius: 8px; padding: 3rem; text-align: center;">
+                        <form id="uploadForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="border: 2px dashed #334155; border-radius: 8px; padding: 3rem; cursor: pointer;" id="dropZone">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #3b82f6; margin-bottom: 1rem; display: block;"></i>
+                                <p style="color: #e2e8f0; font-size: 1.2rem; margin: 1rem 0;">Drop video here or click to select</p>
+                                <p style="color: #94a3b8; font-size: 0.9rem;">Supported: MP4, AVI, MOV, MKV (Max 500MB)</p>
+                                <input type="file" id="fileInput" accept="video/*" style="display: none;">
+                            </div>
+
+                            <div style="padding: 1rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: #94a3b8;">
+                                <p style="margin: 0; font-size: 0.9rem;">
+                                    <i class="fas fa-info-circle" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                                    Video will be processed using YOLOv11 + SlowFast/ActionFormer models
+                                </p>
+                            </div>
+
+                            <button type="submit" style="background: #3b82f6; color: white; padding: 1rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                                Upload & Process
+                            </button>
+                        </form>
+                        <div id="uploadStatus" style="margin-top: 1rem; color: #94a3b8;"></div>
+
+                        <!-- Processing Progress Section with Real-time Video -->
+                        <div id="processingSection" style="display: none; margin-top: 2rem; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 2rem;">
+                            <h3 style="color: #e2e8f0; margin-bottom: 1rem; text-align: center;">
+                                <i class="fas fa-cog fa-spin" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                                Processing Video - Real-time Analysis
+                            </h3>
+                            
+                            <!-- Real-time Frame Display -->
+                            <div style="margin-bottom: 1.5rem; text-align: center;">
+                                <div style="background: #000; border-radius: 8px; overflow: hidden; max-width: 640px; margin: 0 auto; border: 2px solid #3b82f6;">
+                                    <img id="realtimeFrame" src="" alt="Processing..." style="width: 100%; height: auto; display: none;">
+                                    <div id="waitingFrame" style="padding: 3rem; color: #64748b;">
+                                        <i class="fas fa-video" style="font-size: 3rem; display: block; margin-bottom: 1rem;"></i>
+                                        <p>Waiting for frames...</p>
+                                    </div>
+                                </div>
+                                <p id="frameInfo" style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.5rem;">
+                                    Frame: 0 / 0
+                                </p>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div style="margin-bottom: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                    <span id="progressText">Initializing...</span>
+                                    <span id="progressPercent">0%</span>
+                                </div>
+                                <div style="width: 100%; height: 30px; background: #1e293b; border-radius: 15px; overflow: hidden; border: 1px solid #334155;">
+                                    <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #06b6d4); transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Processing Info -->
+                            <div style="background: #1e293b; border-radius: 6px; padding: 1rem; margin-top: 1rem;">
+                                <p id="processingInfo" style="color: #94a3b8; font-size: 0.85rem; margin: 0;">
+                                    <i class="fas fa-info-circle" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                                    Using YOLOv11 + SlowFast+Pose model. Only dangerous behaviors (Fall, Fighting, Fire) will be highlighted.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Output Video Section -->
+                        <div id="outputVideoSection" style="display: none; margin-top: 2rem; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 2rem;">
+                            <h3 style="color: #e2e8f0; margin-bottom: 1rem; text-align: center;">
+                                <i class="fas fa-check-circle" style="color: #10b981; margin-right: 0.5rem;"></i>
+                                Output Video
+                            </h3>
+                            <div style="display: flex; gap: 1.5rem; align-items: flex-start; justify-content: center;">
+                                <!-- Video Player -->
+                                <div style="flex: 0 0 auto; max-width: 800px; width: 100%;">
+                                    <video id="outputVideo" controls style="width: 100%; border-radius: 8px; background: #000; display: block; margin: 0 auto;">
+                                        <source src="" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+                                        <button id="downloadBtn" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                                            <i class="fas fa-download" style="margin-right: 0.5rem;"></i>
+                                            Download Video
+                                        </button>
+                                        <button id="viewAlertsBtn" style="background: #f59e0b; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                                            <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+                                            View Alerts (<span id="alertCount">0</span>)
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Action Timeline Sidebar -->
+                                <div id="timelineSidebar" style="flex: 0 0 300px; width: 300px; background: #1e293b; border-radius: 8px; padding: 1.5rem; max-height: 600px; overflow-y: auto;">
+                                    <h4 style="color: #e2e8f0; margin-bottom: 1rem; font-size: 1.1rem;">
+                                        <i class="fas fa-timeline" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                                        Action Timeline
+                                    </h4>
+                                    <div id="timelineContent" style="color: #94a3b8; font-size: 0.9rem;">
+                                        <p style="text-align: center; padding: 2rem 0;">No actions detected</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Manage Files Section -->
+                <section id="manage-files-page" class="page-section">
+                    <div style="background: #1e293b; border-radius: 8px; padding: 2rem;">
+                        <h3 style="color: #e2e8f0; margin-bottom: 1rem;">Files</h3>
+                        <div id="filesList" style="display: grid; gap: 1rem;"></div>
+                    </div>
+                </section>
+
+                <!-- Alerts Summary Section -->
+                <section id="alerts-summary-page" class="page-section">
+                    <div class="charts-container">
+                        <section class="chart-card full-width">
+                            <h3 class="chart-title">Alert Types Distribution</h3>
+                            <canvas id="alertTypesChart"></canvas>
+                        </section>
+                    </div>
+                    <div class="charts-container">
+                        <section class="chart-card full-width">
+                            <h3 class="chart-title">Recent Alerts</h3>
+                            <div id="alertsList" style="max-height: 600px; overflow-y: auto;"></div>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- Building Alerts Section -->
+                <section id="building-alerts-page" class="page-section">
+                    <div class="charts-container">
+                        <section class="chart-card full-width">
+                            <h3 class="chart-title">Alerts by Buildings</h3>
+                            <canvas id="buildingAlertsChart"></canvas>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- Accumulated Alerts Section -->
+                <section id="accumulated-alerts-page" class="page-section">
+                    <div class="charts-container">
+                        <section class="chart-card full-width">
+                            <h3 class="chart-title">Accumulated Alerts Over Time</h3>
+                            <canvas id="accumulatedAlertsChart"></canvas>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- Add Users Section -->
+                <section id="add-users-page" class="page-section">
+                    <div style="background: #1e293b; border-radius: 8px; padding: 2rem;">
+                        <form id="addUserForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label style="color: #cbd5e1; display: block; margin-bottom: 0.5rem;">Full Name</label>
+                                <input type="text" placeholder="John Doe" 
+                                       style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: #e2e8f0;">
+                            </div>
+                            <div>
+                                <label style="color: #cbd5e1; display: block; margin-bottom: 0.5rem;">Email</label>
+                                <input type="email" placeholder="user@example.com" 
+                                       style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: #e2e8f0;">
+                            </div>
+                            <div>
+                                <label style="color: #cbd5e1; display: block; margin-bottom: 0.5rem;">Role</label>
+                                <select style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: #e2e8f0;">
+                                    <option>Admin</option>
+                                    <option>Manager</option>
+                                    <option>Viewer</option>
+                                </select>
+                            </div>
+                            <button type="submit" style="background: #3b82f6; color: white; padding: 0.8rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                                Add User
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Contacts Section -->
+                <section id="contacts-page" class="page-section">
+                    <div style="background: #1e293b; border-radius: 8px; padding: 2rem;">
+                        <h3 style="color: #e2e8f0; margin-bottom: 1rem;">Contacts Information</h3>
+                        <div id="contactsList" style="display: grid; gap: 1rem;"></div>
+                    </div>
+                </section>
+
+                <!-- User Chart Section -->
+                <section id="user-chart-page" class="page-section">
+                    <div class="charts-container">
+                        <section class="chart-card full-width">
+                            <h3 class="chart-title">Users by Role</h3>
+                            <canvas id="userRoleChart"></canvas>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
