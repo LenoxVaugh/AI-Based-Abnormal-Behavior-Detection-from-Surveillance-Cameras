@@ -1,98 +1,254 @@
-#  AI-Based Abnormal Behavior Detection
+# AI-Based Abnormal Behavior Detection from Surveillance Cameras
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)
-![PyTorch](https://img.shields.io/badge/PyTorch-1.x-red.svg)
-![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green.svg)
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red.svg)
+![YOLOv11](https://img.shields.io/badge/YOLOv11-Object%20Detection-green.svg)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.x-orange.svg)
+![Flask](https://img.shields.io/badge/Flask-Web%20API-black.svg)
 
-##  Introduction
-This project focuses on detecting abnormal human behaviors from surveillance camera footage using Artificial Intelligence. The system analyzes video streams to identify suspicious or unusual activities automatically, reducing the need for constant manual monitoring.
+## Overview
 
-The model processes video frames, extracts **spatial-temporal features**, and classifies behaviors into **Normal** or **Abnormal** categories.
+This project is an AI-powered surveillance system designed to automatically detect abnormal human behaviors from security camera footage.
 
-##  Objectives
-* **Detect** abnormal behaviors (fighting, falling, etc.) in real-time.
-* **Apply** state-of-the-art deep learning techniques for video analysis.
-* **Build** an automated surveillance monitoring system.
-* **Minimize** human error and manual monitoring effort.
+The system combines object detection, human tracking, pose estimation, and action recognition to identify suspicious activities such as:
 
----
+* Fighting
+* Falling
+* Running
+* Abnormal movements
+* Other safety-related incidents
 
-##  System Architecture
-
-| Stage | Process | Description |
-| :--- | :--- | :--- |
-| **1** | **Video Input** | Raw footage from surveillance cameras. |
-| **2** | **Frame Extraction** | Breaking video into sequences of images. |
-| **3** | **Preprocessing** | Resizing, normalization, and noise reduction. |
-| **4** | **Feature Extraction** | Capturing spatial (CNN) and temporal (LSTM) features. |
-| **5** | **Classification** | Deep Learning model determines the behavior type. |
-| **6** | **Output** | Visual alerts and prediction results. |
+The goal is to reduce manual monitoring effort and provide real-time alerts for security and safety applications.
 
 ---
 
-##  Dataset
-The dataset contains surveillance videos categorized into normal and abnormal activities.
+## Key Features
 
-### Abnormal Examples:
-* 👊 **Fighting** or physical altercations.
-* 🏃 **Running** in restricted areas.
-* 📉 **Falling** (elderly care or workplace safety).
-* 🕵️ **Suspicious movements** (loitering).
+* Real-time video processing
+* Human detection using YOLOv11
+* Multi-object tracking
+* Human pose extraction (Skeleton-based representation)
+* Action recognition using SlowFast architecture
+* Automatic abnormal behavior detection
+* Alert generation and logging
+* Web-based monitoring dashboard using Flask
 
-### Directory Structure:
+---
+
+## System Pipeline
+
 ```text
-dataset/
-├── train/
-│   ├── normal/
-│   └── abnormal/
-└── test/
-    ├── normal/
-    └── abnormal/
+Video Stream
+      │
+      ▼
+YOLOv11 Person Detection
+      │
+      ▼
+Multi-Object Tracking
+      │
+      ▼
+Pose Estimation
+      │
+      ▼
+Skeleton Sequence Generation
+      │
+      ▼
+SlowFast Action Recognition
+      │
+      ▼
+Behavior Classification
+      │
+      ▼
+Alert Generation & Visualization
 ```
-### Technologies Used
-* Language: Python
-* Computer Vision: OpenCV
-* Deep Learning: TensorFlow / PyTorch
-* Data Science: NumPy, Matplotlib
 
-### Installation & Setup
-1. Clone the repository
-Bash
-git clone [https://github.com/LenoxVaughn/abnormal-behavior-detection.git](https://github.com/LenoxVaughn/abnormal-behavior-detection.git)
-cd abnormal-behavior-detection
-2. Create virtual environment
-Bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
+---
 
-# Linux / Mac
-python3 -m venv venv
-source venv/bin/activate
-3. Install dependencies
-Bash
-pip install -r requirements.txt
-### Project Structure
-```Plaintext
-abnormal-behavior-detection/
-├── dataset/            # Video data
-├── models/             # Saved model weights
-├── src/                # Source code
-│   ├── preprocessing.py
-│   ├── train.py
-│   └── predict.py
+## Why YOLO + Pose + SlowFast?
+
+### YOLOv11
+
+Responsible for detecting people in each frame.
+
+### Multi-Object Tracking
+
+Maintains unique IDs for detected individuals across video frames.
+
+### Pose Estimation
+
+Extracts human skeleton keypoints and removes unnecessary background information.
+
+### SlowFast
+
+Uses two pathways:
+
+* Slow Pathway → captures spatial information
+* Fast Pathway → captures motion dynamics
+
+This combination improves abnormal behavior recognition performance in surveillance environments.
+
+---
+
+## Technology Stack
+
+### AI & Deep Learning
+
+* PyTorch
+* YOLOv11
+* SlowFast
+* Pose Estimation
+* NumPy
+
+### Computer Vision
+
+* OpenCV
+
+### Backend
+
+* Flask
+* REST API
+
+### Data Processing
+
+* Pandas
+* NumPy
+
+---
+
+## Project Structure
+
+```text
+AI-Based-Abnormal-Behavior-Detection/
+
+├── app.py
 ├── requirements.txt
-└── README.md
-```
-### Usage
-Training:
-Bash
-python src/train.py
-Inference:
-Bash
-python src/predict.py --video input_video.mp4
-### Author
-AI / Computer Vision Project
+├── README.md
 
-GitHub: @LenoxVaughn
+├── models/
+│   ├── yolo/
+│   ├── slowfast/
+│   └── pose/
+
+├── datasets/
+│   ├── train/
+│   ├── val/
+│   └── test/
+
+├── static/
+├── templates/
+
+├── uploads/
+├── outputs/
+
+├── utils/
+│   ├── preprocessing.py
+│   ├── tracking.py
+│   ├── pose.py
+│   └── inference.py
+
+└── logs/
+```
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/LenoxVaugh/AI-Based-Abnormal-Behavior-Detection-from-Surveillance-Cameras.git
+
+cd AI-Based-Abnormal-Behavior-Detection-from-Surveillance-Cameras
+```
+
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / MacOS:
+
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Running the Application
+
+Start Flask server:
+
+```bash
+python app.py
+```
+
+Open browser:
+
+```text
+http://localhost:5000
+```
+
+Upload a surveillance video and monitor abnormal behavior detection results through the web interface.
+
+---
+
+## Scalability Considerations
+
+Current implementation is designed as a Proof of Concept (POC).
+
+For production deployment, the following improvements are recommended:
+
+* Redis / RabbitMQ message queue
+* Dedicated AI inference workers
+* PostgreSQL for alert metadata
+* WebSocket for real-time status updates
+* Docker containerization
+* TensorRT optimization
+* NVIDIA Triton Inference Server
+* Multi-camera distributed processing
+
+---
+
+## Future Improvements
+
+* Real-time RTSP camera support
+* WebRTC live streaming
+* Multi-GPU inference
+* Distributed processing pipeline
+* Alert notification via Email / Telegram
+* Mobile dashboard
+
+---
+
+## Results
+
+The system successfully demonstrates:
+
+* Human detection
+* Human tracking
+* Pose-based behavior understanding
+* Abnormal behavior classification
+* Automated surveillance monitoring
+
+---
+
+## Author
+
+**Bùi Vĩnh Lộc**
+
+Artificial Intelligence Engineer
+
+GitHub: https://github.com/LenoxVaugh
