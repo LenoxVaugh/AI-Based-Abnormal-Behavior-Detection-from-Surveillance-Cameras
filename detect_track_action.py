@@ -955,7 +955,7 @@ def process_video_with_tracking(
     action_model = load_action_model(slowfast_checkpoint)
     pose_model = load_pose_model()
     fire_yolo = load_fire_model("checkpoints/best_model_fire.pt")
-    fire_cnn = load_fire_verification_cnn("D:/FA25/realtime_app/checkpoints/fire_red_cnn.pth")
+    fire_cnn = load_fire_verification_cnn("D:\\Download\\CodeApp\\checkpoints\\fire_red_cnn.pth")
     tracker = PersonTracker(iou_thresh=0.15, max_missed=20)  # Very low IOU + appearance templates
     fire_tracker = FireTracker(iou_thresh=0.20, max_missed=90)  # Fire tracker with 3s persistence
 

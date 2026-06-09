@@ -4,7 +4,7 @@ python-dotenv==1.0.0
 Werkzeug==2.3.7
 torch==2.0.1
 torchvision==0.15.2
-ultralytics==8.0.185
+ultralytics==8.4.61
 opencv-python==4.8.1.78
 numpy==1.24.3
 imageio==2.33.1
